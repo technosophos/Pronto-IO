@@ -10,13 +10,14 @@ registry.route('test')
   .does(ReadFile, 'file')
     .using('path', '/etc/hosts')
     .using('options', {'encoding': 'utf8'})
-  .does(pronto.command.Closure, 'out')
+  .does(pronto.commands.Closure, 'out')
     .using('fn', function (cxt, param, cmd) {
       var f = cxt.get('file');
       assert.ok(f instanceof fs.ReadStream);
       var out = [];
       f.on('data', function (data) {
-        out.push(Data);
+        console.log(data);
+        out.push(data);
       });
       f.on('end', function (e) {
         assert.ok(out.length > 0);
@@ -25,3 +26,6 @@ registry.route('test')
 
 
     })
+;
+
+router.handleRequest('test');

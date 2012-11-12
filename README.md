@@ -19,18 +19,28 @@ Clone the GitHub repo. You can install it into an application with:
 
 ## Usage
 
+This example opens `/etc/hosts` (with ReadFile) and then prints the file
+to the console with `PrintStream`.
+
 ```javascript
 
 var prontoIO = require('pronto-io');
+var pronto = require('pronto');
 
-// With some existing pronto registry....
 registry.route('test')
-  .does(pio.ReadFile, 'file')
+  .does(prontoIO.ReadFile, 'file')
     .using('path', '/etc/hosts')
-  // You will now have a stream named `file` in your context.
+    .using('options', {'encoding': 'utf8'})
+  .does(prontoIO.PrintStream, 'out')
+    .using('stream').from('cxt:file')
+;
+
+router.handleRequest('test');
+
 ```
 
 ## Commands
 
 - prontoIO.ReadFile: Given a path, open a read stream to the file and
 put the stream in the context.
+- prontoIO.PrintStream: A utility for dumping a stream into the console.
